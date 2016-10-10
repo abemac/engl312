@@ -3,10 +3,13 @@ package layout;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
-import javafx.scene.control.Button;
+import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
@@ -16,6 +19,8 @@ import javafx.stage.Stage;
 public class Home extends Layout {
 
 	private TextField searchBar;
+	private ListView<String> list;
+	ObservableList<String> items;
 	public Home(Stage primaryStage) {
 		super(primaryStage);
 		// TODO Auto-generated constructor stub
@@ -59,19 +64,81 @@ public class Home extends Layout {
 			}
 		});
 		
+		searchBar.setOnKeyTyped(new EventHandler<KeyEvent>(){
+
+			@Override
+			public void handle(KeyEvent event) {
+				if(event.getCode()==KeyCode.ENTER){
+					list.getItems().remove(list.getItems().size()-1);
+					list.getItems().add(searchBar.getText());
+					list.getItems().add("");
+					if(list.getItems().size()<7){
+						list.setMaxHeight(list.getItems().size()*25);
+					}else {
+						list.setMaxHeight(7*25);
+					}
+					
+					searchBar.clear();
+					
+				}else{
+					list.getItems().remove(list.getItems().size()-1);
+					list.getItems().add(searchBar.getText()+event.getCharacter());
+
+					//System.out.println(list.getItems().get(list.getItems().size()-1));
+				}
+				
+			}
+			
+		});
+		searchBar.setOnKeyPressed(new EventHandler<KeyEvent>(){
+
+			@Override
+			public void handle(KeyEvent event) {
+				if(event.getCode()==KeyCode.ENTER){
+					list.getItems().remove(list.getItems().size()-1);
+					list.getItems().add(searchBar.getText());
+					list.getItems().add("");
+					if(list.getItems().size()<7){
+						list.setMaxHeight(list.getItems().size()*25);
+					}else {
+						list.setMaxHeight(7*25);
+					}
+					
+					searchBar.clear();
+					
+				}else{
+					list.getItems().remove(list.getItems().size()-1);
+					list.getItems().add(searchBar.getText()+event.getCharacter());
+
+					//System.out.println(list.getItems().get(list.getItems().size()-1));
+				}
+				
+			}
+			
+		});
 		search.getChildren().add(searchBar);
 		
-		Button searchBtn=new Button("Go");
-		search.getChildren().add(searchBtn);
+		//Button searchBtn=new Button("Go");
+		//search.getChildren().add(searchBtn);
 		
-		search.setSpacing(6);
+		list = new ListView<String>();
+		items = FXCollections.observableArrayList();
+		items.add("Check in");
+		list.setMaxWidth(250);
+		list.setMaxHeight(50);
+		list.setItems(items);
+		list.setId("lv");
+		//list.getStylesheets().add(getClass().getResource("/styles/home/list-view.css").toString());
+		
+		search.getChildren().add(list);
+		search.setSpacing(15);
 		search.setMaxWidth(1000);
 		
 		center.getChildren().add(search);
 		
 		center.setAlignment(Pos.CENTER);
 		bp.setCenter(center);
-		searchBtn.requestFocus();
+		//searchBtn.requestFocus();	 
 		
 		
 	}
