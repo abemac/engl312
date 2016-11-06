@@ -150,14 +150,14 @@ public class Login extends Layout {
 	
 	
 	 private void login(Stage primaryStage, String EID, String pwd){
-	    	if(sql.Login.correct(EID, pwd)){
+	    	//if(sql.Login.correct(EID, pwd)){
 	    		SessionData.setUser(EID);
 	    		root.getChildren().clear();
 	    		primaryStage.setFullScreen(true);
 	    		Home home= new Home(primaryStage);
 	    		LayoutManager.applyLayout(home, root);
 	    		
-	    	}
+	    	//}
 	    }
 
 }
