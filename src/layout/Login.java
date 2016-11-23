@@ -23,7 +23,7 @@ import javafx.scene.media.MediaPlayer.Status;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import util.SessionData;
+import util.Sdata;
 
 public class Login extends Layout {
 
@@ -117,11 +117,11 @@ public class Login extends Layout {
         
         VBox top = new VBox();
         top.setAlignment(Pos.CENTER);
-        Text title = new Text("Courtyard Marriot");
+        Text title = new Text("Simple PMS");
         title.setFont(new Font("Courier New Bold",50));
         top.setPadding(new Insets(50,0,0,0));
-        Text loc = new Text("Newark, DE");
-        loc.setFont(new Font("Courier New",25));
+        Text loc = new Text("Property Management Software");
+        loc.setFont(new Font("Courier New Italic",20));
         top.getChildren().add(title);
         top.getChildren().add(loc);
         root.setTop(top);
@@ -144,14 +144,14 @@ public class Login extends Layout {
        // primaryStage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
         primaryStage.setHeight(600);
         primaryStage.setWidth(900);
-        primaryStage.setTitle("HMS");
+        primaryStage.setTitle("SimplePMS");
 		
 	}
 	
 	
 	 private void login(Stage primaryStage, String EID, String pwd){
 	    	//if(sql.Login.correct(EID, pwd)){
-	    		SessionData.setUser(EID);
+	    		Sdata.setUser(EID);
 	    		root.getChildren().clear();
 	    		primaryStage.setFullScreen(true);
 	    		Home home= new Home(primaryStage);

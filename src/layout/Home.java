@@ -3,24 +3,26 @@ package layout;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
-import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import util.Sdata;
 
 public class Home extends Layout {
 
 	private TextField searchBar;
 	private Button searchBtn;
+	private BorderPane bp;
 	public Home(Stage primaryStage) {
 		super(primaryStage);
 		// TODO Auto-generated constructor stub
@@ -28,6 +30,7 @@ public class Home extends Layout {
 
 	@Override
 	public void applyTo(BorderPane bp) {
+		this.bp=bp;
 		VBox center = new VBox();
 		
 		VBox search = new VBox();
@@ -66,23 +69,12 @@ public class Home extends Layout {
 			}
 		});
 		
-		searchBar.setOnKeyTyped(new EventHandler<KeyEvent>(){
-
-			@Override
-			public void handle(KeyEvent event) {
-				if(event.getCode()==KeyCode.ENTER){
-					
-				}
-				
-			}
-			
-		});
 		searchBar.setOnKeyPressed(new EventHandler<KeyEvent>(){
 
 			@Override
 			public void handle(KeyEvent event) {
 				if(event.getCode()==KeyCode.ENTER){
-					
+					handleUsrInput(searchBar.getText());
 				}
 				
 			}
@@ -93,18 +85,71 @@ public class Home extends Layout {
 		searchBtn=new Button("Go");
 		search.getChildren().add(searchBtn);
 		
-		
-		
+		searchBtn.setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent event) {
+				handleUsrInput(searchBar.getText());
+				
+			}
+		});
 		search.setSpacing(15);
 		search.setMaxWidth(1000);
 		
 		center.getChildren().add(search);
 		
 		center.setAlignment(Pos.CENTER);
+		center.setPadding(new Insets(0,0,0,0));
 		bp.setCenter(center);
 		searchBtn.requestFocus();	 
 		
+		VBox top = new VBox();
+        top.setAlignment(Pos.TOP_CENTER);
+        Text title = new Text("Simple PMS");
+        title.setFont(new Font("Courier New Bold",50));
+        top.setPadding(new Insets(50,0,0,0));
+        Text loc = new Text("Property Management Software");
+        loc.setFont(new Font("Courier New Italic",20));
+        top.getChildren().add(title);
+        top.getChildren().add(loc);
+        bp.setTop(top);
+        
+        
 		
+		
+	}
+	
+	
+	private void handleUsrInput(String input){
+		if(input.toUpperCase().trim().equals("CHECK IN") || aliasOf(input,Sdata.CHECK_IN)){
+			bp.getChildren().clear();
+    		primaryStage.setFullScreen(true);
+    		CheckIn ci= new CheckIn(primaryStage);
+    		LayoutManager.applyLayout(ci, bp);
+		}
+		else if(input.toUpperCase().trim().equals("CHECK OUT") || aliasOf(input,Sdata.CHECK_OUT)){
+			
+		}else if(input.toUpperCase().trim().equals("ADD CUSTOMER") || aliasOf(input,Sdata.ADD_CUSTOMER)){
+			
+		}else if(input.toUpperCase().trim().equals("WAKE UP CALL") || aliasOf(input,Sdata.WAKE_UP_CALL)){
+			
+		}else if(input.toUpperCase().trim().equals("ROOM SERVICE") || aliasOf(input,Sdata.ROOM_SERVICE)){
+			
+		}else if(input.toUpperCase().trim().equals("EMAIL") || aliasOf(input,Sdata.EMAIL)){
+			
+		}else if(input.toUpperCase().trim().equals("TENDS") || aliasOf(input,Sdata.TRENDS)){
+			
+		}else if(input.toUpperCase().trim().equals("MONEY") || aliasOf(input,Sdata.MONEY)){
+			
+		}else if(input.toUpperCase().trim().equals("BREAKFAST") || aliasOf(input,Sdata.BREAKFAST)){
+			
+		}else if(input.toUpperCase().trim().equals("RESERVATION") || aliasOf(input,Sdata.RESERVATION)){
+			
+		}
+	}
+	
+	private boolean aliasOf(String input,int cmdIndex){
+		return Sdata.aliases.get(cmdIndex).contains(input);
 	}
 
 }
