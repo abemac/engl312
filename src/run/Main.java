@@ -1,9 +1,6 @@
 package run;
 
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-
 import javafx.application.Application;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
@@ -22,7 +19,7 @@ public class Main extends Application {
         loginLayout=new layout.Login(primaryStage);
         root = new BorderPane();
         layout.LayoutManager.applyLayout(loginLayout, root);
-        loadAliases();
+        Sdata.init();
  	    
         primaryStage.show();
  
@@ -40,11 +37,6 @@ public class Main extends Application {
         launch(args);
     }
     
-    private void loadAliases(){
-    	Sdata.aliases=new ArrayList<LinkedList<String>>();
-    	for(int i=0;i<12;i++){
-    		Sdata.aliases.add(new LinkedList<String>());
-    		Sdata.aliases.get(i).add("test");
-    	}
-    }
+    
+    
 }

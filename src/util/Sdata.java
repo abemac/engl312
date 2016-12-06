@@ -3,6 +3,8 @@ package util;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
+import com.mysql.jdbc.jmx.LoadBalanceConnectionGroupManager;
+
 public class Sdata {
 
 	
@@ -20,6 +22,8 @@ public class Sdata {
 	public static final int RESERVATION=10;
 	
 	public static ArrayList<LinkedList<String>> aliases;
+	public static boolean[] roomsTaken;
+	public static ArrayList<Customer> customers;
 	
 	public static void setUser(String eid){
 		if(user==null){
@@ -29,8 +33,33 @@ public class Sdata {
 		}
 	}
 	
+	public static void init(){
+		loadAliases();
+		loadCustomers();
+		initRooms();
+	}
 	
+	private static void loadAliases(){
+    	Sdata.aliases=new ArrayList<LinkedList<String>>();
+    	for(int i=0;i<12;i++){
+    		Sdata.aliases.add(new LinkedList<String>());
+    		Sdata.aliases.get(i).add("test");
+    	}
+    }
 	
+	private static void loadCustomers(){
+		customers=new ArrayList<Customer>();
+		customers.add(new Customer("Bob Rice"));
+		customers.add(new Customer("Brad Smith"));
+		customers.add(new Customer("Foulack Ruacien"));
+		customers.add(new Customer("MR. OB"));
+		
+	}
+	private static void initRooms(){
+		roomsTaken=new boolean[301];
+		roomsTaken[277]=true;
+		
+	}
 	
 	
 }

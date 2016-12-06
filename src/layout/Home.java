@@ -9,6 +9,8 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
@@ -37,9 +39,20 @@ public class Home extends Layout {
 		search.setAlignment(Pos.CENTER);
 		searchBar = new TextField();
 		
+		
 		searchBar.setMaxWidth(400);
 		searchBar.setMinWidth(400);
 		
+		
+		
+		Image img = new Image(getClass().getResourceAsStream("/hotel.png"),512,225,true,true);
+        ImageView iv = new ImageView(img);
+		search.getChildren().add(iv);
+		
+		VBox spacer = new VBox();
+		spacer.setMaxHeight(1);
+		spacer.setMinHeight(1);
+		search.getChildren().add(spacer);
 		Font searchBarFont = Font.font("Courier New Bold",25);
 		
 		searchBar.setFont(searchBarFont);
@@ -103,17 +116,18 @@ public class Home extends Layout {
 		bp.setCenter(center);
 		searchBtn.requestFocus();	 
 		
-		VBox top = new VBox();
-        top.setAlignment(Pos.TOP_CENTER);
-        Text title = new Text("Simple PMS");
-        title.setFont(new Font("Courier New Bold",50));
-        top.setPadding(new Insets(50,0,0,0));
-        Text loc = new Text("Property Management Software");
-        loc.setFont(new Font("Courier New Italic",20));
-        top.getChildren().add(title);
-        top.getChildren().add(loc);
-        bp.setTop(top);
-        
+//		
+//		VBox top = new VBox();
+//        top.setAlignment(Pos.TOP_CENTER);
+//        Text title = new Text("Simple PMS");
+//        title.setFont(new Font("Courier New Bold",50));
+//        top.setPadding(new Insets(50,0,0,0));
+//        Text loc = new Text("Property Management Software");
+//        loc.setFont(new Font("Courier New Italic",20));
+//        top.getChildren().add(title);
+//        top.getChildren().add(loc);
+//        bp.setTop(top);
+//        
         
 		
 		

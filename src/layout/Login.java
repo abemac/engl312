@@ -60,6 +60,7 @@ public class Login extends Layout {
         StackPane sp = new StackPane();
         Image img = new Image(getClass().getResourceAsStream("/laughing.png"),200,200,true,true);
         ImageView iv = new ImageView(img);
+        iv.setOpacity(0.2);
         iv.setOnMouseClicked(new EventHandler<MouseEvent>(){
 			@Override
 			public void handle(MouseEvent event) {
@@ -115,35 +116,38 @@ public class Login extends Layout {
         vbox.setSpacing(6);
         
         
+        BorderPane titlebp=new BorderPane();
         VBox top = new VBox();
         top.setAlignment(Pos.CENTER);
-        Text title = new Text("Simple PMS");
+        Text title = new Text("SimplePMS");
         title.setFont(new Font("Courier New Bold",50));
         top.setPadding(new Insets(50,0,0,0));
         Text loc = new Text("Property Management Software");
         loc.setFont(new Font("Courier New Italic",20));
         top.getChildren().add(title);
         top.getChildren().add(loc);
-        root.setTop(top);
+        titlebp.setTop(top);
         
         primaryStage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
+        
+        sp.setPadding(new Insets(50, 0, 0, 0));
         sp.getChildren().add(vbox);
         root.setCenter(sp);
         
             
        
-                
+        StackPane sp2 = new StackPane(titlebp,root);
         
                  
 
                 
-        Scene scene = new Scene(root);
-        root.setStyle("-fx-background-color: #8eb1d5;");
+        Scene scene = new Scene(sp2);
+        titlebp.setStyle("-fx-background-color: #8eb1d5;");
         primaryStage.setScene(scene);	
-        //primaryStage.setFullScreen(true);
-       // primaryStage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
-        primaryStage.setHeight(600);
-        primaryStage.setWidth(900);
+       // primaryStage.setFullScreen(true);
+        //primaryStage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
+        primaryStage.setHeight(450);
+        primaryStage.setWidth(400);
         primaryStage.setTitle("SimplePMS");
 		
 	}
