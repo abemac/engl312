@@ -1,5 +1,13 @@
 package layout;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
+
+import javax.print.attribute.standard.NumberOfDocuments;
+
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -87,7 +95,7 @@ public class CheckIn extends Layout {
 						center.getChildren().remove(i);
 					}
 					
-					if(selectedCustomer.reservation==0){//no reservation
+					if(selectedCustomer.reservationStart==0){//no reservation
 						Text nores = new Text(selectedCustomer.name + " does not have a reservation.");
 						nores.setFont(new Font("Courier New Bold",20));
 						center.getChildren().add(nores);
@@ -128,7 +136,8 @@ public class CheckIn extends Layout {
 										
 									boolean booked=false;
 									for(int j=1;j<366 && booked==false;j++){
-										nightsnum.getItems().add(j);//add checking for reservations*******************************
+										 nightsnum.getItems().add(j);//add checking for reservations*******************************
+										 
 									}
 									
 									center.getChildren().add(nightsnum);
@@ -162,6 +171,29 @@ public class CheckIn extends Layout {
 														center.getChildren().remove(center.getChildren().size()-1);
 														center.getChildren().remove(center.getChildren().size()-1);
 														center.getChildren().remove(center.getChildren().size()-1);
+														
+														//add reservation to the customer
+														DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+														DateFormat df2 = new SimpleDateFormat("yyyyMMdd");
+														
+														
+														
+														
+														Date d = new Date();
+														//System.out.println(df2.format(d));
+														selectedCustomer.reservationStart=Long.parseLong(df2.format(d));
+														System.out.println(selectedCustomer.reservationStart);
+														
+														LocalDate ld = LocalDate.parse(df.format(d));
+														ld=ld.plusDays(numNights);
+														Date d2 = Date.from(ld.atStartOfDay(ZoneId.systemDefault()).toInstant());
+														selectedCustomer.reservationEnd=Long.parseLong(df2.format(d2));
+														System.out.println(selectedCustomer.reservationEnd);
+														
+														selectedCustomer.roomNumber=roomNum;
+														selectedCustomer.checkedIn=true;
+														
+														util.Sdata.roomsTaken[roomNum]=true;
 														
 														Text t = new Text(selectedCustomer.name +" is now checked in!");
 														t.setFont(new Font("Courier New Bold", 50) );

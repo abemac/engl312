@@ -142,6 +142,10 @@ public class Home extends Layout {
     		LayoutManager.applyLayout(ci, bp);
 		}
 		else if(input.toUpperCase().trim().equals("CHECK OUT") || aliasOf(input,Sdata.CHECK_OUT)){
+			bp.getChildren().clear();
+    		primaryStage.setFullScreen(true);
+    		CheckOut co= new CheckOut(primaryStage);
+    		LayoutManager.applyLayout(co, bp);
 			
 		}else if(input.toUpperCase().trim().equals("ADD CUSTOMER") || aliasOf(input,Sdata.ADD_CUSTOMER)){
 			
@@ -151,14 +155,16 @@ public class Home extends Layout {
 			
 		}else if(input.toUpperCase().trim().equals("EMAIL") || aliasOf(input,Sdata.EMAIL)){
 			
-		}else if(input.toUpperCase().trim().equals("TENDS") || aliasOf(input,Sdata.TRENDS)){
+		}else if(input.toUpperCase().trim().equals("TRENDS") || aliasOf(input,Sdata.TRENDS)){
 			
 		}else if(input.toUpperCase().trim().equals("MONEY") || aliasOf(input,Sdata.MONEY)){
 			
 		}else if(input.toUpperCase().trim().equals("BREAKFAST") || aliasOf(input,Sdata.BREAKFAST)){
 			
 		}else if(input.toUpperCase().trim().equals("RESERVATION") || aliasOf(input,Sdata.RESERVATION)){
-			
+			bp.getChildren().clear();
+			Reservation r= new Reservation(primaryStage);
+			LayoutManager.applyLayout(r, bp);
 		}
 	}
 	

@@ -6,7 +6,8 @@ public class Customer {
 	public int roomNumber;
 	public boolean checkedIn;
 	
-	public long reservation; //format yyyymmddyyyymmdd
+	public long reservationStart; //format yyyymmdd
+	public long reservationEnd;
 	public double balance;
 	public boolean VIP;
 	
