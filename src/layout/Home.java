@@ -148,6 +148,9 @@ public class Home extends Layout {
     		LayoutManager.applyLayout(co, bp);
 			
 		}else if(input.toUpperCase().trim().equals("ADD CUSTOMER") || aliasOf(input,Sdata.ADD_CUSTOMER)){
+			bp.getChildren().clear();
+			NewCust nc = new NewCust(primaryStage);
+			LayoutManager.applyLayout(nc, bp);
 			
 		}else if(input.toUpperCase().trim().equals("WAKE UP CALL") || aliasOf(input,Sdata.WAKE_UP_CALL)){
 			

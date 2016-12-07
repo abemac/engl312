@@ -2,7 +2,7 @@ package util;
 
 public class Customer {
 
-	public String name,email;
+	public String name,email,addInfo;
 	public int roomNumber;
 	public boolean checkedIn;
 	
