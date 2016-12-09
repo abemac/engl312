@@ -30,8 +30,13 @@ public class CheckIn extends Layout {
 	private Customer selectedCustomer;
 	private int roomNum;
 	private int numNights;
+	private boolean sl=false;
 	public CheckIn(Stage primaryStage) {
 		super(primaryStage);
+	}
+	public CheckIn(Stage primaryStage,boolean sl) {
+		super(primaryStage);
+		this.sl=sl;
 	}
 
 	@Override
@@ -49,7 +54,8 @@ public class CheckIn extends Layout {
         label.setFont(new Font("Courier New Bold Italic",40));
         center.getChildren().add(label);
         
-        Image img = new Image(getClass().getResourceAsStream("/stock_smiley-6.png"),200,200,true,true);
+        int random = (int)(Math.random()*10);
+        Image img = new Image(getClass().getResourceAsStream("/face"+random+".png"),200,200,true,true);
         ImageView iv = new ImageView(img);
         center.getChildren().add(iv);
         
@@ -62,7 +68,11 @@ public class CheckIn extends Layout {
         
         ComboBox<Customer> customers = new ComboBox<Customer>();
         for(Customer c : util.Sdata.customers){
-        	customers.getItems().add(c);
+        	if(!c.isCheckedIn())
+        		customers.getItems().add(c);
+        }
+        if(sl){
+        	customers.setValue(customers.getItems().get(customers.getItems().size()-1));
         }
         left.getChildren().add(customers);
         container.getChildren().add(left);
@@ -75,7 +85,9 @@ public class CheckIn extends Layout {
 			
 			@Override
 			public void handle(ActionEvent event) {
-				// TODO Auto-generated method stub
+				bp.getChildren().clear();
+				NewCust2 nc = new NewCust2(primaryStage);
+				LayoutManager.applyLayout(nc, bp);
 				
 			}
 		});
@@ -95,8 +107,8 @@ public class CheckIn extends Layout {
 						center.getChildren().remove(i);
 					}
 					
-					if(selectedCustomer.reservationStart==0){//no reservation
-						Text nores = new Text(selectedCustomer.name + " does not have a reservation.");
+					if(selectedCustomer.getReservationStart().equals("none")){//no reservation
+						Text nores = new Text(selectedCustomer.getName() + " does not have a reservation.");
 						nores.setFont(new Font("Courier New Bold",20));
 						center.getChildren().add(nores);
 						
@@ -124,7 +136,7 @@ public class CheckIn extends Layout {
 									center.getChildren().remove(center.getChildren().size()-1);
 									
 									
-									Text chooseStayTime = new Text(selectedCustomer.name + " checking in");
+									Text chooseStayTime = new Text(selectedCustomer.getName() + " checking in");
 									chooseStayTime.setFont(new Font("Courier New Bold",20));
 									center.getChildren().add(chooseStayTime);
 									
@@ -155,7 +167,8 @@ public class CheckIn extends Layout {
 												center.getChildren().remove(center.getChildren().size()-1);
 												
 												
-												Text custS = new Text("Customer Name: "+selectedCustomer.name);
+												
+												Text custS = new Text("Customer Name: "+selectedCustomer.getName());
 												custS.setFont(new Font("Courier New Bold",40));
 												Text roomN = new Text("Room Number: "+roomNum);
 												roomN.setFont(new Font("Courier New Bold",40));
@@ -163,6 +176,21 @@ public class CheckIn extends Layout {
 												nightsts.setFont(new Font("Courier New Bold",40));
 												center.getChildren().addAll(custS,roomN,nightsts);
 												Button checkIn = new Button("Check In");
+												HBox buttons=new HBox(25);
+												buttons.setAlignment(Pos.CENTER);
+												Button cancel = new Button("Cancel");
+												buttons.getChildren().add(cancel);
+												cancel.setOnAction(new EventHandler<ActionEvent>() {
+													
+													@Override
+													public void handle(ActionEvent event) {
+														bp.getChildren().clear();
+														Home h = new Home(primaryStage);
+														LayoutManager.applyLayout(h, bp);
+														
+													}
+												});
+												center.getChildren().add(buttons);
 												checkIn.setOnAction(new EventHandler<ActionEvent>() {
 
 													@Override
@@ -174,28 +202,28 @@ public class CheckIn extends Layout {
 														
 														//add reservation to the customer
 														DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-														DateFormat df2 = new SimpleDateFormat("yyyyMMdd");
+														DateFormat df2 = new SimpleDateFormat("MM/dd/yyyy");
 														
 														
 														
 														
 														Date d = new Date();
 														//System.out.println(df2.format(d));
-														selectedCustomer.reservationStart=Long.parseLong(df2.format(d));
-														System.out.println(selectedCustomer.reservationStart);
+														selectedCustomer.setReservationStart((df2.format(d)));
+														//System.out.println(selectedCustomer.reservationStart);
 														
 														LocalDate ld = LocalDate.parse(df.format(d));
 														ld=ld.plusDays(numNights);
 														Date d2 = Date.from(ld.atStartOfDay(ZoneId.systemDefault()).toInstant());
-														selectedCustomer.reservationEnd=Long.parseLong(df2.format(d2));
-														System.out.println(selectedCustomer.reservationEnd);
+														selectedCustomer.setReservationEnd(df2.format(d2));
+														//System.out.println(selectedCustomer.reservationEnd);
 														
-														selectedCustomer.roomNumber=roomNum;
-														selectedCustomer.checkedIn=true;
-														
+														selectedCustomer.setRoomNumber(roomNum);
+														selectedCustomer.setCheckedIn(true);
+														selectedCustomer.setNumDays(numNights);
 														util.Sdata.roomsTaken[roomNum]=true;
 														
-														Text t = new Text(selectedCustomer.name +" is now checked in!");
+														Text t = new Text(selectedCustomer.getName() +" is now checked in!");
 														t.setFont(new Font("Courier New Bold", 50) );
 														//t.setWrappingWidth(primaryStage.getWidth());														
 														center.getChildren().add(t);
@@ -214,7 +242,7 @@ public class CheckIn extends Layout {
 													}
 												});
 													
-												center.getChildren().add(checkIn);
+												buttons.getChildren().add(checkIn);
 											}
 											
 										}
@@ -225,7 +253,75 @@ public class CheckIn extends Layout {
 							}
 						});
 						center.getChildren().add(next2);
-					}else{
+					}else{//has reservation
+						Text res = new Text(selectedCustomer.getName() + " has a reservation.");
+						res.setFont(new Font("Courier New Bold",35));
+						center.getChildren().add(res);
+						
+						Text room = new Text("Room No. "+selectedCustomer.getRoomNumber());
+						room.setFont(new Font("Courier New Bold",20));
+						center.getChildren().add(room);
+						
+						Text nightsts = new Text("Staying from "+selectedCustomer.getReservationStart()+" to "+selectedCustomer.getReservationEnd());
+						nightsts.setFont(new Font("Courier New Bold",20));
+						center.getChildren().add(nightsts);
+						
+						Text num = new Text(selectedCustomer.getNumDays()+" nights total");
+						num.setFont(new Font("Courier New Bold",20));
+						center.getChildren().add(num);
+						
+						
+						Button checkIn = new Button("Check in");
+						
+						HBox buttons=new HBox(25);
+						buttons.setAlignment(Pos.CENTER);
+						Button cancel = new Button("Cancel");
+						buttons.getChildren().add(cancel);
+						cancel.setOnAction(new EventHandler<ActionEvent>() {
+							
+							@Override
+							public void handle(ActionEvent event) {
+								bp.getChildren().clear();
+								Home h = new Home(primaryStage);
+								LayoutManager.applyLayout(h, bp);
+								
+							}
+						});
+						center.getChildren().add(buttons);
+						buttons.getChildren().add(checkIn);
+						checkIn.setOnAction(new EventHandler<ActionEvent>() {
+							
+							@Override
+							public void handle(ActionEvent event) {
+								center.getChildren().remove(center.getChildren().size()-1);
+								center.getChildren().remove(center.getChildren().size()-1);
+								center.getChildren().remove(center.getChildren().size()-1);
+								center.getChildren().remove(center.getChildren().size()-1);
+								center.getChildren().remove(center.getChildren().size()-1);
+								selectedCustomer.setCheckedIn(true);
+								util.Sdata.roomsTaken[selectedCustomer.getRoomNumber()]=true;
+								
+								Text t = new Text(selectedCustomer.getName() +" is now checked in!");
+								t.setFont(new Font("Courier New Bold", 50) );
+								//t.setWrappingWidth(primaryStage.getWidth());														
+								center.getChildren().add(t);
+								Button ok = new Button("Ok");
+								ok.setOnAction(new EventHandler<ActionEvent>() {
+									
+									@Override
+									public void handle(ActionEvent event) {
+										bp.getChildren().clear();
+							    		Home h= new Home(primaryStage);
+							    		LayoutManager.applyLayout(h, bp);
+										
+									}
+								});
+								center.getChildren().add(ok);
+								
+								
+							}
+						});
+						
 						
 					}
 				}

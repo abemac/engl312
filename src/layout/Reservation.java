@@ -26,11 +26,16 @@ public class Reservation extends Layout {
 	
 	private Customer selectedCustomer;
 	private int roomNum,numNights;
+	private boolean sl =false;
 	public Reservation(Stage primaryStage) {
 		super(primaryStage);
 		// TODO Auto-generated constructor stub
 	}
-
+	public Reservation(Stage primaryStage,boolean sl) {
+		super(primaryStage);
+		this.sl=sl;
+		// TODO Auto-generated constructor stub
+	}
 	@Override
 	public void applyTo(BorderPane bp) {
 		HBox container= new HBox();
@@ -44,7 +49,8 @@ public class Reservation extends Layout {
         label.setFont(new Font("Courier New Bold",40));
         center.getChildren().add(label);
         
-        Image img = new Image(getClass().getResourceAsStream("/stock_smiley-6.png"),200,200,true,true);
+        int random = (int)(Math.random()*10);
+        Image img = new Image(getClass().getResourceAsStream("/face"+random+".png"),200,200,true,true);
         ImageView iv = new ImageView(img);
         center.getChildren().add(iv);
         
@@ -59,6 +65,9 @@ public class Reservation extends Layout {
         for(Customer c : util.Sdata.customers){
         	customers.getItems().add(c);
         }
+        if(sl){
+        	customers.setValue(customers.getItems().get(customers.getItems().size()-1));
+        }
         left.getChildren().add(customers);
         container.getChildren().add(left);
         
@@ -70,7 +79,9 @@ public class Reservation extends Layout {
 			
 			@Override
 			public void handle(ActionEvent event) {
-				// TODO Auto-generated method stub
+				bp.getChildren().clear();
+				NewCust3 nc = new NewCust3(primaryStage);
+				LayoutManager.applyLayout(nc, bp);
 				
 			}
 		});
@@ -91,7 +102,7 @@ public class Reservation extends Layout {
 					}
 					
 					
-						Text nores = new Text( "Creating reservation for "+selectedCustomer.name);
+						Text nores = new Text( "Creating reservation for "+selectedCustomer.getName());
 						nores.setFont(new Font("Courier New Bold",20));
 						center.getChildren().add(nores);
 						
@@ -125,7 +136,7 @@ public class Reservation extends Layout {
 									
 									ComboBox<String> cb = new ComboBox<String>();
 									DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-									DateFormat df2 = new SimpleDateFormat("yyyyMMdd");
+									DateFormat df2 = new SimpleDateFormat("MM/dd/yyyy");
 								
 									Date d = new Date();
 								//	System.out.println(selectedCustomer.reservationStart);
@@ -149,9 +160,9 @@ public class Reservation extends Layout {
 											if(cb.getValue()!=null){
 												LocalDate ld = LocalDate.parse(cb.getValue());
 												Date d2 = Date.from(ld.atStartOfDay(ZoneId.systemDefault()).toInstant());
-												selectedCustomer.reservationStart=Long.parseLong(df2.format(d2));
+												selectedCustomer.setReservationStart(df2.format(d2));
 												
-												System.out.println(selectedCustomer.reservationStart);
+												System.out.println(selectedCustomer.getReservationStart());
 												
 												center.getChildren().remove(center.getChildren().size()-1);
 												center.getChildren().remove(center.getChildren().size()-1);
@@ -159,7 +170,7 @@ public class Reservation extends Layout {
 												
 												
 												
-												Text chooseStayTime = new Text(selectedCustomer.name + "'s Reservation");
+												Text chooseStayTime = new Text(selectedCustomer.getName() + "'s Reservation");
 												chooseStayTime.setFont(new Font("Courier New Bold",20));
 												center.getChildren().add(chooseStayTime);
 												
@@ -190,15 +201,31 @@ public class Reservation extends Layout {
 															center.getChildren().remove(center.getChildren().size()-1);
 															
 															
-															Text custS = new Text("Customer Name: "+selectedCustomer.name);
+															Text custS = new Text("Customer Name: "+selectedCustomer.getName());
 															custS.setFont(new Font("Courier New Bold",40));
 															Text roomN = new Text("Room Number: "+roomNum);
 															roomN.setFont(new Font("Courier New Bold",40));
-															Text startDate = new Text("Starting on "+ df.format(d2));
+															Text startDate = new Text("Starting on "+ df2.format(d2));
 															startDate.setFont(new Font("Courier New Bold",40));
 															Text nightsts = new Text("Staying for "+numNights+" nights");
 															nightsts.setFont(new Font("Courier New Bold",40));
 															center.getChildren().addAll(custS,roomN,startDate,nightsts);
+															HBox buttons=new HBox(25);
+															buttons.setAlignment(Pos.CENTER);
+															Button cancel = new Button("Cancel");
+															buttons.getChildren().add(cancel);
+															cancel.setOnAction(new EventHandler<ActionEvent>() {
+																
+																@Override
+																public void handle(ActionEvent event) {
+																	bp.getChildren().clear();
+																	selectedCustomer.setReservationStart("none");
+																	Home h = new Home(primaryStage);
+																	LayoutManager.applyLayout(h, bp);
+																	
+																}
+															});
+															center.getChildren().add(buttons);
 															Button checkIn = new Button("Make Reservation");
 															checkIn.setOnAction(new EventHandler<ActionEvent>() {
 
@@ -212,28 +239,28 @@ public class Reservation extends Layout {
 																	
 																	//add reservation to the customer
 																	DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-																	DateFormat df2 = new SimpleDateFormat("yyyyMMdd");
+																	DateFormat df2 = new SimpleDateFormat("MM/dd/yyyy");
 																	
 																	
 																	
 																	
 																	Date d = d2;
 																	//System.out.println(df2.format(d));
-																	selectedCustomer.reservationStart=Long.parseLong(df2.format(d));
-																	System.out.println(selectedCustomer.reservationStart);
+																	selectedCustomer.setReservationStart(df2.format(d));
+																	System.out.println(selectedCustomer.getReservationStart());
 																	
 																	LocalDate ld = LocalDate.parse(df.format(d));
 																	ld=ld.plusDays(numNights);
 																	Date d2 = Date.from(ld.atStartOfDay(ZoneId.systemDefault()).toInstant());
-																	selectedCustomer.reservationEnd=Long.parseLong(df2.format(d2));
-																	System.out.println(selectedCustomer.reservationEnd);
-																	
-																	selectedCustomer.roomNumber=roomNum;
+																	selectedCustomer.setReservationEnd(df2.format(d2));
+																	System.out.println(selectedCustomer.getReservationEnd());
+																	selectedCustomer.setNumDays(numNights);
+																	selectedCustomer.setRoomNumber(roomNum);
 																	//selectedCustomer.checkedIn=true;
 																	
 																	util.Sdata.roomsTaken[roomNum]=true;
 																	
-																	Text t = new Text(selectedCustomer.name +" now has a reservation!");
+																	Text t = new Text(selectedCustomer.getName() +" now has a reservation!");
 																	t.setFont(new Font("Courier New Bold", 50) );
 																	//t.setWrappingWidth(primaryStage.getWidth());														
 																	center.getChildren().add(t);
@@ -252,7 +279,7 @@ public class Reservation extends Layout {
 																}
 															});
 																
-															center.getChildren().add(checkIn);
+															buttons.getChildren().add(checkIn);
 														}
 														
 													}

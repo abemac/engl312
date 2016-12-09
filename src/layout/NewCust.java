@@ -32,9 +32,10 @@ public class NewCust extends Layout{
 		title.setFont(new Font("Courier New Bold",30));
 		bp.setCenter(center);
 		center.getChildren().add(title);
-		Image img = new Image(getClass().getResourceAsStream("/stock_smiley-6.png"),200,200,true,true);
-        ImageView iv = new ImageView(img);
-        center.getChildren().add(iv);
+		int random = (int)(Math.random()*10);
+	    Image img = new Image(getClass().getResourceAsStream("/face"+random+".png"),200,200,true,true);
+	    ImageView iv = new ImageView(img);
+	    center.getChildren().add(iv);
 		Text dir = new Text("Enter customer name:");
 		dir.setFont(new Font("Courier New",20));
 		center.getChildren().add(dir);
@@ -95,7 +96,7 @@ public class NewCust extends Layout{
 								center.getChildren().remove(center.getChildren().size()-1);
 								center.getChildren().remove(center.getChildren().size()-1);
 								center.getChildren().remove(center.getChildren().size()-1);
-								util.Sdata.customers.add(new Customer(custName){{this.email=custEmail;this.addInfo=NewCust.this.addInfo;}});
+								util.Sdata.customers.add(new Customer(custName){{setEmail(custEmail);setAddInfo(NewCust.this.addInfo);}});
 								Text done = new Text(custName+" succesfully added!");
 								done.setFont(new Font("Courier New Bold",40));
 								center.getChildren().add(done);

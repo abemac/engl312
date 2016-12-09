@@ -15,7 +15,7 @@ public class Sdata {
 	public static final int OPEN_ROOMS=3;
 	public static final int WAKE_UP_CALL=4;
 	public static final int ROOM_SERVICE=5;
-	public static final int EMAIL=6;
+	public static final int VIEW_CUSTS=6;
 	public static final int TRENDS=7;
 	public static final int MONEY=8;
 	public static final int BREAKFAST=9;

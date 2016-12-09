@@ -58,7 +58,8 @@ public class Login extends Layout {
         
         vbox = new VBox();
         StackPane sp = new StackPane();
-        Image img = new Image(getClass().getResourceAsStream("/laughing.png"),200,200,true,true);
+        int random = (int)(Math.random()*10);
+        Image img = new Image(getClass().getResourceAsStream("/face"+random+".png"),200,200,true,true);
         ImageView iv = new ImageView(img);
         iv.setOpacity(0.2);
         iv.setOnMouseClicked(new EventHandler<MouseEvent>(){

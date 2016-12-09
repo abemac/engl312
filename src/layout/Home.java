@@ -156,8 +156,10 @@ public class Home extends Layout {
 			
 		}else if(input.toUpperCase().trim().equals("ROOM SERVICE") || aliasOf(input,Sdata.ROOM_SERVICE)){
 			
-		}else if(input.toUpperCase().trim().equals("EMAIL") || aliasOf(input,Sdata.EMAIL)){
-			
+		}else if(input.toUpperCase().trim().equals("CUSTOMERS") || aliasOf(input,Sdata.VIEW_CUSTS)){
+			bp.getChildren().clear();
+			ViewCusts nc = new ViewCusts(primaryStage);
+			LayoutManager.applyLayout(nc, bp);
 		}else if(input.toUpperCase().trim().equals("TRENDS") || aliasOf(input,Sdata.TRENDS)){
 			
 		}else if(input.toUpperCase().trim().equals("MONEY") || aliasOf(input,Sdata.MONEY)){

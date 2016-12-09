@@ -8,6 +8,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
@@ -34,7 +35,8 @@ public class CheckOut extends Layout{
         label.setFont(new Font("Courier New Bold Italic",40));
         center.getChildren().add(label);
         
-        Image img = new Image(getClass().getResourceAsStream("/stock_smiley-6.png"),200,200,true,true);
+        int random = (int)(Math.random()*10);
+        Image img = new Image(getClass().getResourceAsStream("/face"+random+".png"),200,200,true,true);
         ImageView iv = new ImageView(img);
         center.getChildren().add(iv);
         
@@ -46,29 +48,46 @@ public class CheckOut extends Layout{
         
         ComboBox<Customer> custs = new ComboBox<Customer>();
         for(Customer c  : util.Sdata.customers){
-        	if(c.checkedIn){
+        	if(c.isCheckedIn()){
         		custs.getItems().add(c);
         	}
         }
+        
         center.getChildren().add(custs);
+        HBox buttons=new HBox(25);
+		buttons.setAlignment(Pos.CENTER);
+		Button cancel = new Button("Cancel");
+		buttons.getChildren().add(cancel);
+		cancel.setOnAction(new EventHandler<ActionEvent>() {
+			
+			@Override
+			public void handle(ActionEvent event) {
+				bp.getChildren().clear();
+				Home h = new Home(primaryStage);
+				LayoutManager.applyLayout(h, bp);
+				
+			}
+		});
+		center.getChildren().add(buttons);
         Button checkOut = new Button("Check Out");
     	checkOut.setOnAction(new EventHandler<ActionEvent>() {
 			
 			@Override
 			public void handle(ActionEvent event) {
+				if(custs.getValue()==null){return;}
 				selectedCustomer=custs.getValue();
 				center.getChildren().remove(center.getChildren().size()-1);
 				center.getChildren().remove(center.getChildren().size()-1);
 				center.getChildren().remove(center.getChildren().size()-1);
 				
 				
-				Text checkedOut = new Text (selectedCustomer.name + " is now checked out.");
+				Text checkedOut = new Text (selectedCustomer.getName() + " is now checked out.");
 				checkedOut.setFont(new Font("Courier New Bold",40));
 				center.getChildren().add(checkedOut);
 				
-				selectedCustomer.checkedIn=false;
-				selectedCustomer.reservationEnd=0;
-				selectedCustomer.reservationStart=0;
+				selectedCustomer.setCheckedIn(false);
+				selectedCustomer.setReservationEnd("none");
+				selectedCustomer.setReservationStart("none");
 				
 				Button ok = new Button("Ok");
 				ok.setOnAction(new EventHandler<ActionEvent>() {
@@ -84,7 +103,7 @@ public class CheckOut extends Layout{
 				center.getChildren().add(ok);
 			}
 		});
-    	center.getChildren().add(checkOut);
+    	buttons.getChildren().add(checkOut);
     	
 
         
