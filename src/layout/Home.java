@@ -25,6 +25,8 @@ public class Home extends Layout {
 	private TextField searchBar;
 	private Button searchBtn;
 	private BorderPane bp;
+	private String lastCmd;
+	private boolean red=false;
 	public Home(Stage primaryStage) {
 		super(primaryStage);
 		// TODO Auto-generated constructor stub
@@ -58,6 +60,7 @@ public class Home extends Layout {
 		searchBar.setFont(searchBarFont);
 		String styleBlack = "-fx-alignment: center;-fx-text-inner-color: black;";
 		String styleGray= "-fx-alignment: center;-fx-text-inner-color: lightgray;";
+		
 		searchBar.setStyle(styleGray);
 		searchBar.setText("Tell me what to do");
 		
@@ -66,6 +69,7 @@ public class Home extends Layout {
 
 			@Override
 			public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+				
 				if(!searchBar.isFocused()){
 					if(searchBar.getText().trim().equals("")){
 						searchBar.setText("Tell me what to do");
@@ -86,6 +90,10 @@ public class Home extends Layout {
 
 			@Override
 			public void handle(KeyEvent event) {
+				if(red){
+					red=false;
+					searchBar.setStyle(styleBlack);
+				}
 				if(event.getCode()==KeyCode.ENTER){
 					handleUsrInput(searchBar.getText());
 				}
@@ -135,23 +143,30 @@ public class Home extends Layout {
 	
 	
 	private void handleUsrInput(String input){
+		boolean success=false;
+		int cmdIndex=-1;
 		if(input.toUpperCase().trim().equals("CHECK IN") || aliasOf(input,Sdata.CHECK_IN)){
 			bp.getChildren().clear();
     		primaryStage.setFullScreen(true);
     		CheckIn ci= new CheckIn(primaryStage);
     		LayoutManager.applyLayout(ci, bp);
+    		success=true;
+    		cmdIndex=Sdata.CHECK_IN;
 		}
 		else if(input.toUpperCase().trim().equals("CHECK OUT") || aliasOf(input,Sdata.CHECK_OUT)){
 			bp.getChildren().clear();
     		primaryStage.setFullScreen(true);
     		CheckOut co= new CheckOut(primaryStage);
     		LayoutManager.applyLayout(co, bp);
+    		success=true;
+    		cmdIndex=Sdata.CHECK_OUT;
 			
 		}else if(input.toUpperCase().trim().equals("ADD CUSTOMER") || aliasOf(input,Sdata.ADD_CUSTOMER)){
 			bp.getChildren().clear();
 			NewCust nc = new NewCust(primaryStage);
 			LayoutManager.applyLayout(nc, bp);
-			
+			success=true;
+			cmdIndex=Sdata.ADD_CUSTOMER;
 		}else if(input.toUpperCase().trim().equals("WAKE UP CALL") || aliasOf(input,Sdata.WAKE_UP_CALL)){
 			
 		}else if(input.toUpperCase().trim().equals("ROOM SERVICE") || aliasOf(input,Sdata.ROOM_SERVICE)){
@@ -160,6 +175,8 @@ public class Home extends Layout {
 			bp.getChildren().clear();
 			ViewCusts nc = new ViewCusts(primaryStage);
 			LayoutManager.applyLayout(nc, bp);
+			success=true;
+			cmdIndex=Sdata.VIEW_CUSTS;
 		}else if(input.toUpperCase().trim().equals("TRENDS") || aliasOf(input,Sdata.TRENDS)){
 			
 		}else if(input.toUpperCase().trim().equals("MONEY") || aliasOf(input,Sdata.MONEY)){
@@ -170,6 +187,18 @@ public class Home extends Layout {
 			bp.getChildren().clear();
 			Reservation r= new Reservation(primaryStage);
 			LayoutManager.applyLayout(r, bp);
+			success=true;
+			cmdIndex=Sdata.RESERVATION;
+		}
+		
+		if(success && lastCmd!=null){
+			Sdata.aliases.get(cmdIndex).add(lastCmd);
+			lastCmd=null;
+		}
+		if(!success){
+			lastCmd=input;
+			searchBar.setStyle("-fx-alignment: center;-fx-text-inner-color: red;");
+			red=true;
 		}
 	}
 	
